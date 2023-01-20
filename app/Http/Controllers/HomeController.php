@@ -39,11 +39,14 @@ class HomeController extends Controller
         // auth()->user()->givePermissionTo('edit article');
         // auth()->user()->assignRole('Delete');
         // User::all()->where('name','Kenza')->first()->assignRole('Consulte');
+        $MAC = exec('getmac');
+        $MAC = strtok($MAC, ' ');
+
         $role = Role::findById(6);
         $perm = $role->getPermissionNames();
         $roles = Role::all();
         $users = User::all();
-        return view('home',['users'=>$users,'rolePerm'=>$perm,'roles'=>$roles]);
+        return view('home',['users'=>$users,'rolePerm'=>$perm,'roles'=>$roles,'mac'=>$MAC]);
     }
     
     public function assignPermissions(Request $request){

@@ -12,9 +12,12 @@ class RoleController extends Controller
    
     public function index()
     {
+        $MAC = exec('getmac');
+        $MAC = strtok($MAC, ' ');
+
         $roles = Role::all();
         $permissions = Permission::all();
-        return view('roleAssign',['roles'=>$roles,'permissions'=>$permissions]);
+        return view('roleAssign',['roles'=>$roles,'permissions'=>$permissions,'mac'=>$MAC]);
     }
 
     

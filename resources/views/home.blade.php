@@ -21,7 +21,7 @@
                     <a class="dropdown-item" href="{{ route('logout') }}"
                        onclick="event.preventDefault();
                                      document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }} ? {{ Auth::user()->name }}
+                        {{ __('Logout') }} ? {{ Auth::user()->name }} &nbsp;&nbsp;<span class="badge badge-danger">{{$mac}}</span>
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                         @csrf
@@ -31,7 +31,7 @@
             <div class="col-md-10">
                 <div class="card p-4 shadow p-3 mb-5 bg-white rounded">
                     <br>
-                <h4>Liste des utilisateurs</h4> <br><br>
+                <h4>Liste des utilisateurs </h4> <br><br>
                   <table  class="table table-striped" id="myTable">
                     <thead>
                         <tr>

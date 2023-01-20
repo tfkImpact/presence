@@ -29,6 +29,9 @@ class StatsController extends Controller
    
     public function show($id)
     {
+        $MAC = exec('getmac');
+        $MAC = strtok($MAC, ' ');
+
         $employee = Employee::all()->find($id);
 
         $presence = Presence::all()->where('emplyee_id',$id);
@@ -45,10 +48,11 @@ class StatsController extends Controller
          
             $result[date_format($date,"l")] = $total;
          }
-         return view('stats',['employee'=>$employee,'late'=>$total,'data'=>$result]);
+         return view('stats',['employee'=>$employee,'late'=>$total,'data'=>$result,'mac'=>$MAC]);
        }
         $employees = Employee::all();
-        return view('all_employees',['employees'=> $employees]);
+
+        return view('all_employees',['employees'=> $employees,'mac'=>$MAC]);
     }
 
     private function calculate($mystr){
@@ -82,7 +86,6 @@ class StatsController extends Controller
         }
         return $total_late_minute ;
     }
-
    
     public function edit($id)
     {

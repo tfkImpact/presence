@@ -71,7 +71,7 @@
                     <a class="dropdown-item" href="{{ route('logout') }}"
                        onclick="event.preventDefault();
                                      document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }} ? {{ Auth::user()->name }}
+                        {{ __('Logout') }} ? {{ Auth::user()->name }} &nbsp;&nbsp;<span class="badge badge-danger">{{$mac}}</span>
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                         @csrf

@@ -11,7 +11,10 @@ class EmployeeController extends Controller
     public function index()
     {
         $employees = Employee::all();
-        return view('all_employees',['employees'=> $employees]);
+        $MAC = exec('getmac');
+        $MAC = strtok($MAC, ' ');
+
+        return view('all_employees',['employees'=> $employees,'mac'=>$MAC]);
     }
 
    
