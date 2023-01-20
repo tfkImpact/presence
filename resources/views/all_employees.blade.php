@@ -68,7 +68,7 @@
                                 <td>
                                     <div style="display: flex; justify-content: space-evenly;">
                                     <div class="edit">
-                                           href="" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#exampleModal" data-id="{{ $employee->id }}" data-fname="{{$employee->first_name}}" data-lname="{{$employee->last_name}}" data-phone="{{$employee->phone}}" data-email="{{ $employee->email }}" data-adress="{{ $employee->adress }}">Edit</a>
+                                          <a href="" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#exampleModal" data-id="{{ $employee->id }}" data-fname="{{$employee->first_name}}" data-lname="{{$employee->last_name}}" data-phone="{{$employee->phone}}" data-email="{{ $employee->email }}" data-adress="{{ $employee->adress }}">Edit</a>
                                     </div>
                                     <div class="delete">
                                         <form action="{{ route('employees.destroy', $employee->id)}}" method="post">

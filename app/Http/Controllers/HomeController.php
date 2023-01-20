@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\RoleHasPermission;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -20,10 +22,8 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    
     public function index()
     {
-        
         // Role::create(['name'=>'Consulte']);
         // Role::create(['name'=>'Create']);
         // Role::create(['name'=>'Update']);
@@ -37,32 +37,32 @@ class HomeController extends Controller
         // $role->revokePermissionTo($permission);
         // dd(auth()->user());
         // auth()->user()->givePermissionTo('edit article');
-        // auth()->user()->assignRole('writer');
-        // User::all()->where('name','Hamza')->first()->assignRole('tester');
-
+        // auth()->user()->assignRole('Delete');
+        // User::all()->where('name','Kenza')->first()->assignRole('Consulte');
+        $role = Role::findById(6);
+        $perm = $role->getPermissionNames();
+        $roles = Role::all();
         $users = User::all();
-        return view('home',['users'=>$users]);
+        return view('home',['users'=>$users,'rolePerm'=>$perm,'roles'=>$roles]);
     }
     
-
-
     public function assignPermissions(Request $request){
-
-        info($request);
+     
         $role = Role::findById($request->role_id);
         foreach($request->permissions as $permission){
            $role->givePermissionTo($permission);
         }
-
         $answer = $request->role_id;
         return response()->json(['answer' => $answer]);
     }
     
-    public function assignRoles(){
-        $users = User::all();
-        $roles = Role::all();
-        $permissions = Permission::all();
-        return view('home',['users'=>$users,'roles'=>$roles,'permissions'=>$permissions]);
+    public function assignRoles(Request $request){
+
+        $user = User::all()->find($request->user_id);
+        foreach($request->roles as $role){
+            $user->assignRole($role);
+        }
+        return response()->json(['answer' => 'good']);
     }
 
 }

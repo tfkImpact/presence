@@ -6,12 +6,15 @@
             <div class="col-md-2">
                 <div class="space" style="height:20em;"></div>
                 <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action active">Dashbord</a>
-                        <a href="/employees" class="list-group-item list-group-item-action">List des employees</a>
-                        <a href="/presence" class="list-group-item list-group-item-action">Inserer la presence</a>
-                        <a href="/home" class="list-group-item list-group-item-action">Liste des utilisateur de l'app</a>
+                    
+                    <a href="#" class="list-group-item list-group-item-action active">Dashbord</a>
+                    <a href="/employees" class="list-group-item list-group-item-action">List des employees</a>
+                    <a href="/presence" class="list-group-item list-group-item-action">Inserer la presence</a>
+                    <a href="/home" class="list-group-item list-group-item-action">Liste des utilisateur de l'app</a>
+                    @if(auth()->user()->can('Create presence'))
                         <a href="/role" class="list-group-item list-group-item-action">Role assignment</a>
                         <a href="/permission" class="list-group-item list-group-item-action">Permission assignment</a>
+                    @endif
                 </div>
             </div>
             <div class="col-md-10">
@@ -25,7 +28,7 @@
                             <td>Nom et Prenom</td>
                             <td>email</td>
                             <td>Cree le </td>
-                            <td>Select</td>
+                            <td>Roles</td>
                             <td>Actions</td>
                         </tr>
                     </thead>
@@ -36,12 +39,22 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->created_at }}</td>
-                                <td><input type="checkbox" name="role" id="permission_{{$user->id}}" value="{{$user->id}}"></td>
+                                <td>
+                                    @foreach($user->getRoleNames() as $role)
+                                    <div style="padding: 0.2em;border:0.1px solid gray;background-color: rgba(127, 204, 209, 0.589);margin-bottom: .2em;border-radius: .3em; width: 100px;text-align: center;">
+                                        <p>{{$role}}</p>
+                                    </div>
+                                @endforeach
+                                </td>
                                 <td>
                                     <div style="display: flex; justify-content: space-evenly;">
                                     <div class="edit">
                                         <a href="" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#exampleModal" data-id="{{ $user->id }}" data-name="{{$user->name}}" data-email="{{ $user->email }}" data-password="{{ $user->password }}">Edit</a>
                                     </div>
+                                    <div class="role">
+                                        <a href="" type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal2" data-id="{{ $user->id }}" >Assign roles</a>
+                                    </div>
+                                    @if(auth()->user()->can('Delete presence'))
                                     <div class="delete">
                                         <form action="{{ route('user.destroy', $user->id)}}" method="post">
                                             @method('DELETE')
@@ -49,6 +62,7 @@
                                             <input class="btn btn-danger btn-sm" type="submit" value="Delete"/>
                                         </form>
                                     </div>
+                                    @endif
                                     </div>
                                 </td>
                             </tr>
@@ -59,19 +73,66 @@
             </div>
         </div>
     </div>  
+    <!------------------------modal------------------------>
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Adding Permission to Role</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                @foreach($roles as $role)
+                <div style="padding: 0.3em;background-color: rgba(253, 154, 137, 0.849);margin-bottom: .2em;border-radius: .3em; width: auto">
+                    <h5><span class="badge badge-danger">{{$role->id}}</span>&nbsp;&nbsp;&nbsp; {{$role->name}}&nbsp;&nbsp;&nbsp;<input type="checkbox" name="role" id="check_{{$role->id}}" value="{{$role->id}}"></h5>
+                </div>
+                @endforeach
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button class="btn btn-primary" id="toUser" data-link="{{ route('rolesToUser.assignRoles')}}" >Ajouter</button>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
 <script>
 $(document).ready( function () {
     $('#myTable').DataTable();
-} );
+var roles = [];
+var id=0;
+$('#exampleModal2').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      id = button.data('id')
+    });
+    $('#toUser').click(function(){
 
+            $.each($("input[name='role']:checked"), function(){
+                roles.push($(this).val());
+            });
+            const CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+            var url =$(this).attr("data-link");
+            $.ajax({
+            type: "POST",
+            url: url, 
+            dataType: 'JSON',
+            data: { _token: CSRF_TOKEN,
+                    roles: roles,
+                    user_id:id
+                },
+            success:function(data){
+                $('#exampleModal2').modal('hide');
+                window.location.reload();
+            },error:function(){ 
+                alert("error!!!!");
+            }
+            });
+            roles = [];
+            id=0;
+    });
 
-var permissions = [];
-$('input[type="checkbox"]').change(function() {
-
-    // alert($(this).parent().prev().text()+" "+$(this).val())
-    
 });
-
 </script>
 @endsection
 

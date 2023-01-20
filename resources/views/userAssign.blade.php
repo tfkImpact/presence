@@ -14,19 +14,21 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <!-- bootsrap -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
       <!-- data table---->
-    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css"  rel="stylesheet">
+      <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+      <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css"  rel="stylesheet">
 </head>
 <style>
-ul {
-  list-style-image: url("{{ asset('assets/img/bullet.png') }}");
-}
-ul li{
-    font-size: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
+    ul {
+     list-style-image: url("{{ asset('assets/img/bullet.png') }}") ;
+    }
+    ul li{
+        font-size: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
 </style>
 <body>
 <div class="space" style="height:3em;"></div>
@@ -107,7 +109,8 @@ ul li{
           </div>
         </div>
     </div>
-     <!-----------------------modal of permisssion----------------->
+     
+    <!-----------------------modal of permisssion----------------->
      <div class="modal fade" id="permissionModal" tabindex="-1" role="dialog" aria-labelledby="permissionModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -118,7 +121,7 @@ ul li{
               </button>
             </div>
             <div class="modal-body">
-                @foreach($permissions as $permission)
+                @foreach($permissions->where('id',) as $permission)
                     <div style="padding: 0.5em;border:0.5px solid gray;background-color: rgba(127, 153, 209, 0.589);margin-bottom: .2em;border-radius: .3em; width: auto">
                         <h5><span class="badge badge-danger">{{$permission->id}}</span>&nbsp;&nbsp;&nbsp; {{$permission->name}}&nbsp;&nbsp;&nbsp;<input type="checkbox" name="permission" id="check_{{$permission->id}}" value="{{$permission->id}}"></h5>
                     </div>
@@ -158,8 +161,7 @@ $(document).ready( function () {
                 role_id:id
             },
         success:function(data){
-            $('#exampleModal').modal('hide');
-            window.location.reload();
+            alert(data.answer);
         },error:function(){ 
             alert("error!!!!");
         }
@@ -172,4 +174,3 @@ $(document).ready( function () {
 </script>
 </body>
 </html>
-
