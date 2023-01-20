@@ -34,10 +34,24 @@
                     </a>
                         <a href="/employees" class="list-group-item list-group-item-action">Liste des employees</a>
                         <a href="/presence" class="list-group-item list-group-item-action">Inserer la presence</a>
+                        @if(auth()->user()->can('Delete employee'))
                         <a href="/home" class="list-group-item list-group-item-action">Liste des utilisateur de l'app</a>
-                        <a href="/role" class="list-group-item list-group-item-action">Role assignment</a>
-                        <a href="/permission" class="list-group-item list-group-item-action">Permission assignment</a>
+                            <a href="/role" class="list-group-item list-group-item-action">Role assignment</a>
+                        @endif
+                      
                   </div>
+                  <hr>
+                 
+                <div class="d-flex" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                       onclick="event.preventDefault();
+                                     document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }} ? {{ Auth::user()->name }}
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </div>
             </div>
             <div class="col-md-10">
                 <div class="row">

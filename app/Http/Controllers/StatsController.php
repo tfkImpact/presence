@@ -37,7 +37,6 @@ class StatsController extends Controller
         $total = 0;
        if(!is_null($presence)){
         foreach($presence as $pres){
-         // dd( $pres->created_at->format('l'));
              if($pres->created_at->format('l') == "Monday"){
                  
              }
@@ -63,9 +62,9 @@ class StatsController extends Controller
             case "11":  
                 $total_late_minute = $total_late_minute + (int)substr($mystr,3,2)+120; 
                 break;
-            // case "12":  
-            //     $total_late_minute = $total_late_minute + (int)substr($mystr,3,2)+180; 
-            //     break;
+            case "12":  
+                $total_late_minute = $total_late_minute + (int)substr($mystr,3,2)+180; 
+                break;
             // case "14":  
             //     $total_late_minute = $total_late_minute + (int)substr($mystr,3,2); 
             //     break;

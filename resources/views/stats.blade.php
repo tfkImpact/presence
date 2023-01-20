@@ -47,6 +47,7 @@
     </style>
 </head>
 <body>
+
     <div class="space" style="height:3em;"></div>
     <div class="container-fluid">
 
@@ -59,16 +60,32 @@
                     </a>
                         <a href="/employees" class="list-group-item list-group-item-action">List des employees</a>
                         <a href="/presence" class="list-group-item list-group-item-action">Inserer la presence</a>
+                        @if(auth()->user()->can('Delete employee'))
                         <a href="/home" class="list-group-item list-group-item-action">Liste des utilisateur de l'app</a>
                         <a href="/role" class="list-group-item list-group-item-action">Role assignment</a>
-                        <a href="/permission" class="list-group-item list-group-item-action">Permission assignment</a>
+                        @endif
                   </div>
+                  <hr>
+                 
+                <div class="d-flex" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                       onclick="event.preventDefault();
+                                     document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }} ? {{ Auth::user()->name }}
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </div>
             </div>
             <div class="col-md-10">
                 <div class="jumbotron">
                     <h3>Employee statistics</h3>
                     <p class="lead">statistics de <span class="badge badge-danger">{{$employee->first_name.' '. $employee->last_name}}</span></p>
                     <p><b>Phone: {{ $employee->phone }} </b> &nbsp;&nbsp; Email: {{ $employee->email }}  </p>
+                    @if( !isset($data['Monday']) && !isset($data['Tuesday']) && !isset($data['Wednesday']) && !isset($data['Thursday']) && !isset($data['Friday']) )
+                        <h4 style="color: crimson">Il n'ya pas de données a propos de cet employee!!</h4>
+                    @endif
                   </div>
                   <hr>
                   <div class="card p-4" style="padding: 2em;">
@@ -98,35 +115,35 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            @if(  $data['Monday'] > 0)
+                                            @if( isset($data['Monday']) && $data['Monday'] > 0)
                                                 <span class="badge badge-danger">{{$data['Monday']}} Min</span>
                                             @else
                                                 <span class="badge badge-danger"></span>
                                             @endif
                                         </td>
                                         <td>
-                                            @if(  $data['Tuesday'] > 0)
+                                            @if(  isset($data['Tuesday']) && $data['Tuesday'] > 0)
                                             <span class="badge badge-danger">{{$data['Tuesday']}} Min</span>
                                             @else
                                                 <span class="badge badge-danger"></span>
                                             @endif
                                         </td>
                                         <td>
-                                            @if(  $data['Wednesday'] > 0)
+                                            @if(  isset($data['Wednesday']) && $data['Wednesday'] > 0)
                                             <span class="badge badge-danger">{{$data['Wednesday']}} Min</span>
                                             @else
                                                 <span class="badge badge-danger"></span>
                                             @endif
                                         </td>
                                         <td>
-                                            @if(  $data['Thursday'] > 0)
+                                            @if(  isset($data['Thursday']) && $data['Thursday'] > 0)
                                             <span class="badge badge-danger">{{$data['Thursday']}} Min</span>
                                             @else
                                                 <span class="badge badge-danger"></span>
                                             @endif
                                         </td>
                                         <td>
-                                            @if(  $data['Friday'] > 0)
+                                            @if(  isset($data['Friday']) && $data['Friday'] > 0)
                                             <span class="badge badge-danger">{{$data['Friday']}} Min</span>
                                             @else
                                                 <span class="badge badge-danger"></span>
@@ -186,7 +203,6 @@
             </div>
         </div>
     </div>  
-
     <script>
         const ctx = document.getElementById('myChart');
         new Chart(ctx, {
@@ -195,7 +211,11 @@
             labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'],
             datasets: [{
               label: 'delay',
-              data: [{{$data['Monday']}}, {{$data['Tuesday']}}, {{$data['Wednesday']}}, {{$data['Thursday']}}, {{$data['Friday']}}],
+              @if( isset($data['Monday']) && isset($data['Tuesday']) && isset($data['Wednesday']) &&isset($data['Thursday']) && isset($data['Friday']) )
+                data: [{{$data['Monday']}}, {{$data['Tuesday']}}, {{$data['Wednesday']}}, {{$data['Thursday']}}, {{$data['Friday']}}],
+              @else
+                data: [0, 0,0, 0, 0],
+              @endif
               borderWidth: 1
             }]
           },

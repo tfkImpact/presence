@@ -11,10 +11,21 @@
                     <a href="/employees" class="list-group-item list-group-item-action">List des employees</a>
                     <a href="/presence" class="list-group-item list-group-item-action">Inserer la presence</a>
                     <a href="/home" class="list-group-item list-group-item-action">Liste des utilisateur de l'app</a>
-                    @if(auth()->user()->can('Create presence'))
+                    @if(auth()->user()->can('Create employee'))
                         <a href="/role" class="list-group-item list-group-item-action">Role assignment</a>
-                        <a href="/permission" class="list-group-item list-group-item-action">Permission assignment</a>
                     @endif
+                </div>
+                <hr>
+                 
+                <div class="d-flex" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                       onclick="event.preventDefault();
+                                     document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }} ? {{ Auth::user()->name }}
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
                 </div>
             </div>
             <div class="col-md-10">
@@ -48,21 +59,19 @@
                                 </td>
                                 <td>
                                     <div style="display: flex; justify-content: space-evenly;">
-                                    <div class="edit">
-                                        <a href="" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#exampleModal" data-id="{{ $user->id }}" data-name="{{$user->name}}" data-email="{{ $user->email }}" data-password="{{ $user->password }}">Edit</a>
-                                    </div>
+
                                     <div class="role">
                                         <a href="" type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal2" data-id="{{ $user->id }}" >Assign roles</a>
                                     </div>
-                                    @if(auth()->user()->can('Delete presence'))
-                                    <div class="delete">
-                                        <form action="{{ route('user.destroy', $user->id)}}" method="post">
-                                            @method('DELETE')
-                                            @csrf
-                                            <input class="btn btn-danger btn-sm" type="submit" value="Delete"/>
-                                        </form>
-                                    </div>
-                                    @endif
+                                        @if(auth()->user()->can('Delete employee'))
+                                        <div class="delete">
+                                            <form action="{{ route('user.destroy', $user->id)}}" method="post">
+                                                @method('DELETE')
+                                                @csrf
+                                                <input class="btn btn-danger btn-sm" type="submit" value="Delete"/>
+                                            </form>
+                                        </div>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -85,7 +94,7 @@
             </div>
             <div class="modal-body">
                 @foreach($roles as $role)
-                <div style="padding: 0.3em;background-color: rgba(253, 154, 137, 0.849);margin-bottom: .2em;border-radius: .3em; width: auto">
+                <div style="padding: 0.3em;background-color: rgba(248, 132, 112, 0.849);margin-bottom: .2em;border-radius: .3em; width: auto">
                     <h5><span class="badge badge-danger">{{$role->id}}</span>&nbsp;&nbsp;&nbsp; {{$role->name}}&nbsp;&nbsp;&nbsp;<input type="checkbox" name="role" id="check_{{$role->id}}" value="{{$role->id}}"></h5>
                 </div>
                 @endforeach

@@ -34,15 +34,30 @@
                     </a>
                         <a href="/employees" class="list-group-item list-group-item-action">List des employees</a>
                         <a href="/presence" class="list-group-item list-group-item-action">Inserer la presence</a>
+                        @if(auth()->user()->can('Delete employee'))
                         <a href="/home" class="list-group-item list-group-item-action">Liste des utilisateur de l'app</a>
                         <a href="/role" class="list-group-item list-group-item-action">Role assignment</a>
-                        <a href="/permission" class="list-group-item list-group-item-action">Permission assignment</a>
+                        @endif
                   </div>
+                  <hr>
+                 
+                <div class="d-flex" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                       onclick="event.preventDefault();
+                                     document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }} ? {{ Auth::user()->name }}
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </div>
             </div>
             <div class="col-md-10">
                 <div class="jumbotron">
                     <h3 class="display-4">Liste des Employees</h3>
+                    @if(auth()->user()->can('Delete employee'))
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">AJOUTER employee</button>
+                    @endif
                   </div>
                   <br>
                   <div class="card p-4 shadow p-3 mb-5 bg-white rounded">
@@ -66,6 +81,7 @@
                                 <td>{{ $employee->email }}</td>
                                 <td>{{ $employee->adress }}</td>
                                 <td>
+                                  @if(auth()->user()->can('Delete employee'))
                                     <div style="display: flex; justify-content: space-evenly;">
                                     <div class="edit">
                                           <a href="" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#exampleModal" data-id="{{ $employee->id }}" data-fname="{{$employee->first_name}}" data-lname="{{$employee->last_name}}" data-phone="{{$employee->phone}}" data-email="{{ $employee->email }}" data-adress="{{ $employee->adress }}">Edit</a>
@@ -77,6 +93,7 @@
                                             <input class="btn btn-danger btn-sm" type="submit" value="Delete" />
                                         </form>
                                     </div>
+                                    @endif
                                     <div class="stats">
                                       <a href="{{ route('stats.show', $employee->id)}}" class="btn btn-info btn-sm">Stats</a>
                                     </div>
@@ -134,15 +151,13 @@
             </div>
         </div>
         </form>
-      </div></div></div>
-
+      </div>
+    </div>
+  </div>
 <script>
 $(document).ready( function () {
   $('#myTable').DataTable();
-
-
   $('#exampleModal').on('show.bs.modal', function (event) {
-  
     var button = $(event.relatedTarget) 
     var id = button.data('id')
     var fname = button.data('fname')

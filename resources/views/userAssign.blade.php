@@ -42,7 +42,7 @@
                         <a href="/presence" class="list-group-item list-group-item-action">Inserer la presence</a>
                         <a href="/home" class="list-group-item list-group-item-action">Liste des utilisateur de l'app</a>
                         <a href="/role" class="list-group-item list-group-item-action">Role assignment</a>
-                        <a href="/permission" class="list-group-item list-group-item-action">Permission assignment</a>
+                       
                 </div>
             </div>
             <div class="col-md-10">

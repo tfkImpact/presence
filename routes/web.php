@@ -30,23 +30,26 @@ Route::group(['middleware' => ['auth']], function() {
     //---stats routing bundle
     Route::get('/stats/{id}',[StatsController::class,'show'])->name('stats.show');
 
-    //-----users routing bundle
-    Route::post('/user',[UserController::class,'store'])->name('user.store');
-    Route::delete('/user/{id}',[UserController::class,'destroy'])->name('user.destroy');
-    Route::post('/permissionsToRole',[HomeController::class,'assignPermissions'])->name('permissionsToRole.assignPermissions');
-    Route::post('/rolesToUser',[HomeController::class,'assignRoles'])->name('rolesToUser.assignRoles');
+    Route::group(['middleware' => ['role:Admin']], function () {
+        //-----users routing bundle
+        Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+        Route::post('/user',[UserController::class,'store'])->name('user.store');
+        Route::delete('/user/{id}',[UserController::class,'destroy'])->name('user.destroy');
+        Route::post('/permissionsToRole',[HomeController::class,'assignPermissions'])->name('permissionsToRole.assignPermissions');
+        Route::post('/rolesToUser',[HomeController::class,'assignRoles'])->name('rolesToUser.assignRoles');
+        Route::post('/revokePermission',[HomeController::class,'revokePermissions'])->name('revokePermission.revokePermissions');
 
-    //-------role  routing bundle
-    Route::get('/role',[RoleController::class,'index'])->name('role.index');
-    Route::post('/role',[RoleController::class,'store'])->name('role.store');
-    Route::delete('/role',[RoleController::class,'destroy'])->name('role.destroy');
-
-    //--------permissions routing bundle
-    Route::get('/permission',[PermissionController::class,'index'])->name('permission.index');
-    Route::post('/permission',[PermissionController::class,'store'])->name('permission.store');
-    Route::delete('/permission',[PermissionController::class,'destroy'])->name('permission.destroy');
+        //-------role  routing bundle
+        Route::get('/role',[RoleController::class,'index'])->name('role.index');
+        Route::post('/role',[RoleController::class,'store'])->name('role.store');
+        Route::delete('/role',[RoleController::class,'destroy'])->name('role.destroy');
+        
+        //--------permissions routing bundle
+        Route::get('/permission',[PermissionController::class,'index'])->name('permission.index');
+        Route::post('/permission',[PermissionController::class,'store'])->name('permission.store');
+        Route::delete('/permission',[PermissionController::class,'destroy'])->name('permission.destroy');
+    });
 
 });
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Auth::routes();

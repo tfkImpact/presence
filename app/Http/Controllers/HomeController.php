@@ -55,6 +55,15 @@ class HomeController extends Controller
         $answer = $request->role_id;
         return response()->json(['answer' => $answer]);
     }
+
+    public function revokePermissions(Request $request){
+        $role = Role::findById($request->role_id);
+        foreach($request->permissions as $permission){
+            $role->revokePermissionTo($permission);
+         }
+         $answer = $request->role_id;
+         return response()->json(['answer' => $answer]);
+    }
     
     public function assignRoles(Request $request){
 

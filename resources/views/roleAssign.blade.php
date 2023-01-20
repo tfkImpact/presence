@@ -38,9 +38,21 @@ ul li{
                         <a href="#" class="list-group-item list-group-item-action active">Dashbord</a>
                         <a href="/employees" class="list-group-item list-group-item-action">List des employees</a>
                         <a href="/presence" class="list-group-item list-group-item-action">Inserer la presence</a>
+                        @if(auth()->user()->can('Delete employee'))
                         <a href="/home" class="list-group-item list-group-item-action">Liste des utilisateur de l'app</a>
-                        <a href="/role" class="list-group-item list-group-item-action">Role assignment</a>
-                        <a href="/permission" class="list-group-item list-group-item-action">Permission assignment</a>
+                            <a href="/role" class="list-group-item list-group-item-action">Role assignment</a>
+                        @endif
+                </div>
+                <hr>
+                <div class="d-flex" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                       onclick="event.preventDefault();
+                                     document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }} ? {{ Auth::user()->name }}
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
                 </div>
             </div>
             <div class="col-md-10">
@@ -70,9 +82,8 @@ ul li{
                                     </td>
                                     <td>
                                         <div class="d-flex space-between">
-                                            <a type="botton" name="role" class="btn btn-warning btn-sm" id="{{$role->id}}" data-id="{{$role->id}}" data-toggle="modal" data-target="#exampleModal">Edit</a> &nbsp;&nbsp;
-                                            <a type="botton" name="role" class="btn btn-danger btn-sm" id="{{$role->id}}">Delete</a>
-                                            <a type="botton" name="role" class="btn btn-info btn-sm" id="{{$role->id}}" data-idToShow="{{$role->id}}" data-toggle="modal" data-target="#permissionModal">Show permissions</a>
+                                            <a type="botton" name="role" class="btn btn-info btn-sm" id="assign_{{$role->id}}" data-id="{{$role->id}}" data-toggle="modal" data-target="#exampleModal">Assign permissions to role</a> &nbsp;&nbsp;
+                                            <a type="botton" name="role" class="btn btn-danger btn-sm" id="revoke_{{$role->id}}" data-id-to-revoke="{{$role->id}}" data-toggle="modal" data-target="#permissionModal">revoke permission from role</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -93,7 +104,11 @@ ul li{
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: 600px; overflow-y: auto;">
+                <div class="d-flex float-right">
+                    <button class="btn btn-info" id="select_all">Select all</button>
+                    <button class="btn btn-danger" id="deselect_all">Deselect all</button>
+                </div> <br>
                 @foreach($permissions as $permission)
                 <div style="padding: 0.5em;border:0.5px solid gray;background-color: rgba(127, 153, 209, 0.589);margin-bottom: .2em;border-radius: .3em; width: auto">
                     <h5><span class="badge badge-danger">{{$permission->id}}</span>&nbsp;&nbsp;&nbsp; {{$permission->name}}&nbsp;&nbsp;&nbsp;<input type="checkbox" name="permission" id="check_{{$permission->id}}" value="{{$permission->id}}"></h5>
@@ -117,7 +132,7 @@ ul li{
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: 600px; overflow-y: auto;">
                 @foreach($permissions as $permission)
                     <div style="padding: 0.5em;border:0.5px solid gray;background-color: rgba(127, 153, 209, 0.589);margin-bottom: .2em;border-radius: .3em; width: auto">
                         <h5><span class="badge badge-danger">{{$permission->id}}</span>&nbsp;&nbsp;&nbsp; {{$permission->name}}&nbsp;&nbsp;&nbsp;<input type="checkbox" name="permission" id="check_{{$permission->id}}" value="{{$permission->id}}"></h5>
@@ -125,7 +140,7 @@ ul li{
                 @endforeach
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button class="btn btn-primary" id="toRole" data-link="{{ route('permissionsToRole.assignPermissions')}}">Ajouter</button>
+                  <button class="btn btn-primary" id="revokefromRole" data-link="{{ route('revokePermission.revokePermissions')}}">confirm</button>
                 </div>
             </div>
           </div>
@@ -134,14 +149,18 @@ ul li{
 <script>
 $(document).ready( function () {
     var id=0;
+    var id2=0;
     var permissions = [];
     $('#myTable').DataTable();
     $('#exampleModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
-      id = button.data('id')
+      id = button.data('id');
+      alert(id);
     });
     $('#permissionModal').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget);
+      var button2 = $(event.relatedTarget);
+      id2 = button2.data('id-to-revoke');
+      alert(id2);
     });
     $('#toRole').click(function(){
         $.each($("input[name='permission']:checked"), function(){
@@ -167,8 +186,43 @@ $(document).ready( function () {
         permissions = []
         id=0;
     });
+    //----------revoke permission from role
+    $('#revokefromRole').click(function(){
+        $.each($("input[name='permission']:checked"), function(){
+            permissions.push($(this).val());
+        });
+        const CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+        var url = $(this).attr("data-link");
+        alert(url+"--"+id2+"--"+permissions)
+        $.ajax({
+        type: "POST",
+        url: url, 
+        dataType: 'JSON',
+        data: { _token: CSRF_TOKEN,
+                permissions: permissions,
+                role_id:id2
+            },
+        success:function(data){
+            $('#revokefromRole').modal('hide');
+            window.location.reload();
+        },error:function(){ 
+            alert("error!!!!");
+        }
+        });
+        permissions = []
+        id2=0;
+    });
+    $("#select_all").on('click', function(event){
+        $.each($("input[name='permission']"), function(){
+            $(this).prop( "checked", true );
+        });
+    });
+    $("#deselect_all").on('click', function(event){
+        $.each($("input[name='permission']"), function(){
+            $(this).prop( "checked", false );
+        });
+    });
 });
-
 </script>
 </body>
 </html>
