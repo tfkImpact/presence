@@ -1,66 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Employees</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <!-- bootsrap -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-      <!-- data table---->
-      <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-      <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css"  rel="stylesheet">
-</head>
-<body>
-    <div class="space" style="height:3em;"></div>
+@extends('layouts.subMainLayout')
+@section('content')
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2">
-                <div class="space" style="height:20em;"></div>
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action active">
-                     Dashbord
-                    </a>
-                        <a href="/employees" class="list-group-item list-group-item-action">List des employees</a>
-                        <a href="/presence" class="list-group-item list-group-item-action">Inserer la presence</a>
-                        @if(auth()->user()->can('Delete employee'))
-                        <a href="/home" class="list-group-item list-group-item-action">Liste des utilisateur de l'app</a>
-                        <a href="/role" class="list-group-item list-group-item-action">Role assignment</a>
-                        @endif
-                  </div>
-                  <hr>
-                 
-                <div class="d-flex" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{{ route('logout') }}"
-                       onclick="event.preventDefault();
-                                     document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }} ? {{ Auth::user()->name }} &nbsp;&nbsp;<span class="badge badge-danger">{{$mac}}</span>
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                </div>
-            </div>
-            <div class="col-md-10">
-                <div class="jumbotron">
+            <div class="col-md-12">
+              <div class="d-flex justify-content-between" style="align-items:center">
                     <h3 class="display-4">Liste des Employees</h3>
                     @if(auth()->user()->can('Delete employee'))
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">AJOUTER employee</button>
+                        <button type="button" class="btn btn-primary sm float-right" data-toggle="modal" data-target="#exampleModal"><i class="bi bi-plus-square"></i></button>
                     @endif
                   </div>
                   <br>
-                  <div class="card p-4 shadow p-3 mb-5 bg-white rounded">
+                  
                   <table  class="table table-striped" id="myTable">
                     <thead>
                         <tr>
@@ -103,7 +53,6 @@
                         @endforeach
                     </tbody>
                   </table>
-            </div>
             </div>
         </div>
     </div>  
@@ -176,7 +125,5 @@ $(document).ready( function () {
   });
 });
 </script>
-</body>
-</html>
-
+@stop
 

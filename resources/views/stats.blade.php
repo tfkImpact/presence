@@ -12,73 +12,20 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
     <!-- bootsrap -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
     <!--  chart js---------->
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        table{
-            border: none;
-            border-spacing: 5px;
-            border-collapse: separate;
-        }
-        td{
-            text-align: center;
-            border: 0.3px solid gray;
-            height: 80px;
-            width: 120px;
-            background-color: #82cdffc9;
-            border-radius: .2em;
-        }
-        th{
-            text-align: center;
-            border: 0.3px solid gray;
-            border-radius: .2em;
-            height: 50px;
-            width: 100px;
-        }
-        #weekend{
-            background-color: rgba(243, 125, 184, 0.356);
-        }
-    </style>
 </head>
 <body>
-
     <div class="space" style="height:3em;"></div>
     <div class="container-fluid">
-
         <div class="row">
-            <div class="col-md-2">
-                <div class="space" style="height:20em;"></div>
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action active">
-                     Dashbord
-                    </a>
-                        <a href="/employees" class="list-group-item list-group-item-action">List des employees</a>
-                        <a href="/presence" class="list-group-item list-group-item-action">Inserer la presence</a>
-                        @if(auth()->user()->can('Delete employee'))
-                        <a href="/home" class="list-group-item list-group-item-action">Liste des utilisateur de l'app</a>
-                        <a href="/role" class="list-group-item list-group-item-action">Role assignment</a>
-                        @endif
-                  </div>
-                  <hr>
-                 
-                <div class="d-flex" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{{ route('logout') }}"
-                       onclick="event.preventDefault();
-                                     document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }} ? {{ Auth::user()->name }} &nbsp;&nbsp;<span class="badge badge-danger">{{$mac}}</span>
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                </div>
-            </div>
-            <div class="col-md-10">
+            <div class="col-md-12">
                 <div class="jumbotron">
                     <h3>Employee statistics</h3>
                     <p class="lead">statistics de <span class="badge badge-danger">{{$employee->first_name.' '. $employee->last_name}}</span></p>
@@ -202,7 +149,33 @@
                   </div>
             </div>
         </div>
-    </div>  
+    </div>
+    <style>
+         <style>
+        table{
+            border: none;
+            border-spacing: 5px;
+            border-collapse: separate;
+        }
+        td{
+            text-align: center;
+            border: 0.3px solid gray;
+            height: 80px;
+            width: 120px;
+            background-color: #82cdffc9;
+            border-radius: .2em;
+        }
+        th{
+            text-align: center;
+            border: 0.3px solid gray;
+            border-radius: .2em;
+            height: 50px;
+            width: 100px;
+        }
+        #weekend{
+            background-color: rgba(243, 125, 184, 0.356);
+        }
+    </style> 
     <script>
         const ctx = document.getElementById('myChart');
         new Chart(ctx, {

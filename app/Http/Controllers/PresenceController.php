@@ -12,12 +12,10 @@ class PresenceController extends Controller
     
     public function index()
     {
-        $MAC = exec('getmac');
-        $MAC = strtok($MAC, ' ');
 
         $presence = Presence::all();
         $employee = Employee::all();
-        return view('presence',['presence'=>$presence,'employee'=>$employee,'mac'=>$MAC]);
+        return view('presence',['presence'=>$presence,'employee'=>$employee,'employee_count'=>$employee->count()]);
     }
 
    

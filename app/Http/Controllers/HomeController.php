@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,14 +40,10 @@ class HomeController extends Controller
         // auth()->user()->givePermissionTo('edit article');
         // auth()->user()->assignRole('Delete');
         // User::all()->where('name','Kenza')->first()->assignRole('Consulte');
-        $MAC = exec('getmac');
-        $MAC = strtok($MAC, ' ');
-
-        $role = Role::findById(6);
-        $perm = $role->getPermissionNames();
+        $employees = Employee::all();
         $roles = Role::all();
         $users = User::all();
-        return view('home',['users'=>$users,'rolePerm'=>$perm,'roles'=>$roles,'mac'=>$MAC]);
+        return view('home',['users'=>$users,'roles'=>$roles,'employee_count'=>$employees->count()]);
     }
     
     public function assignPermissions(Request $request){
@@ -74,7 +71,18 @@ class HomeController extends Controller
         foreach($request->roles as $role){
             $user->assignRole($role);
         }
-        return response()->json(['answer' => 'good']);
+        return response()->json(['answer' => 'assigned']);
+    }
+
+    public function revokeRole(Request $request){
+
+        $user = User::all()->find($request->user_id);
+        foreach($request->roles as $role){
+            $user->removeRole($role);
+        }
+        return response()->json(['answer' => 'revoked']);
+
+
     }
 
 }

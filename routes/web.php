@@ -33,11 +33,13 @@ Route::group(['middleware' => ['auth']], function() {
     Route::group(['middleware' => ['role:Admin']], function () {
         //-----users routing bundle
         Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+        Route::get('/all_user',[UserController::class,'index'])->name('user.index');
         Route::post('/user',[UserController::class,'store'])->name('user.store');
         Route::delete('/user/{id}',[UserController::class,'destroy'])->name('user.destroy');
         Route::post('/permissionsToRole',[HomeController::class,'assignPermissions'])->name('permissionsToRole.assignPermissions');
         Route::post('/rolesToUser',[HomeController::class,'assignRoles'])->name('rolesToUser.assignRoles');
         Route::post('/revokePermission',[HomeController::class,'revokePermissions'])->name('revokePermission.revokePermissions');
+        Route::post('/revokeRoleFromUser',[HomeController::class,'revokeRole'])->name('revokeRoleFromUser.revokeRole');
 
         //-------role  routing bundle
         Route::get('/role',[RoleController::class,'index'])->name('role.index');
